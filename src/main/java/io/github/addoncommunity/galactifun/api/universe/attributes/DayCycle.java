@@ -89,7 +89,7 @@ public final class DayCycle {
     public void applyEffects(@Nonnull World world) {
         world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
         if (this.startTime != -1) {
-            world.setTime(this.startTime);
+            setTimeWhenAvailable(world, this.startTime);
         }
     }
 
@@ -98,7 +98,20 @@ public final class DayCycle {
      */
     public void tick(@Nonnull World world) {
         if (this.perFiveSeconds != 0) {
-            world.setTime(world.getTime() + this.perFiveSeconds);
+            setTimeWhenAvailable(world, world.getTime() + this.perFiveSeconds);
+        }
+    }
+
+    private static void setTimeWhenAvailable(World world, long time) {
+        try {
+            world.setTime(time);
+        } catch (IllegalArgumentException error) {
+            // Paper 26.3 has no default clock in some dimension types, so its
+            // default time setter is unavailable. Continue the other effects.
+            // Preserve all other failures, including those from event listeners.
+            if (!"Cannot set time in world without world clock".equals(error.getMessage())) {
+                throw error;
+            }
         }
     }
 
