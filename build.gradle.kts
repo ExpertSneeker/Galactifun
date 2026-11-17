@@ -24,7 +24,7 @@ dependencies {
 }
 
 group = "io.github.addoncommunity.galactifun"
-version = "MODIFIED"
+version = "coreages.20261117.rocket.1"
 description = "Galactifun"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
